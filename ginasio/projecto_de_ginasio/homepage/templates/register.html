@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'logo.jpg' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000000;
+        }
+
+        .register-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .register-header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: #f8f9fa;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .forgot-password a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-custom  {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }   
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Registro</h1>
+        <!-- Formulário de registro com o método POST -->
+        <form action="/register/" method="POST">
+            <!-- Token CSRF para segurança (protege contra ataques CSRF) -->
+            {% csrf_token %}
+    
+            <!-- Campo para o nome de usuário -->
+            <div class="form-group">
+                <i>👤</i> <!-- Ícone para o campo de nome de usuário -->
+                <input type="text" name="username" placeholder="Nome de usuário" required> <!-- Campo de texto para nome de usuário -->
+            </div>
+    
+            <!-- Campo para o email -->
+            <div class="form-group">
+                <i>📧</i> <!-- Ícone para o campo de email -->
+                <input type="email" name="email" placeholder="Email" required> <!-- Campo de email -->
+            </div>
+    
+            <!-- Campo para a senha -->
+            <div class="form-group">
+                <i>🔒</i> <!-- Ícone para o campo de senha -->
+                <input type="password" name="password1" id="password1" placeholder="Senha" required> <!-- Campo de senha -->
+                <!-- Botão para mostrar/esconder a senha -->
+                <button type="button" 
+                        onmousedown="showPassword('password1', this)"  <!-- Quando pressionado, chama a função para mostrar a senha -->
+                        onmouseup="hidePassword('password1', this)"    <!-- Quando solta, chama a função para esconder a senha -->
+                        onmouseleave="hidePassword('password1', this)" <!-- Quando o mouse sai do botão, chama a função para esconder a senha -->
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                               background: none; border: none; cursor: pointer;">
+                    👁️‍🗨️ <!-- Ícone de olho para mostrar/esconder a senha -->
+                </button>
+            </div>
+    
+            <!-- Campo para confirmar a senha -->
+            <div class="form-group">
+                <i>🔒</i> <!-- Ícone para o campo de confirmação de senha -->
+                <input type="password" name="password2" id="password2" placeholder="Confirmar senha" required> <!-- Campo para confirmar a senha -->
+                <!-- Botão para mostrar/esconder a senha de confirmação -->
+                <button type="button" 
+                        onmousedown="showPassword('password2', this)"  <!-- Quando pressionado, chama a função para mostrar a senha -->
+                        onmouseup="hidePassword('password2', this)"    <!-- Quando solta, chama a função para esconder a senha -->
+                        onmouseleave="hidePassword('password2', this)" <!-- Quando o mouse sai do botão, chama a função para esconder a senha -->
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                               background: none; border: none; cursor: pointer;">
+                    👁️‍🗨️ <!-- Ícone de olho para mostrar/esconder a senha -->
+                </button>
+            </div>
+    
+            <!-- Botão de registro -->
+            <button type="submit" class="btn-custom btn-primary">Registrar</button>
+    
+            <!-- Link para retornar à página de login -->
+            <a href="{% url 'gym:login' %}" class="btn-custom btn-secondary">Voltar para o login</a>
+        </form>
+    </div>
+    
+    <script>
+        // Função para mostrar a senha ao alterar o tipo do campo de "password" para "text"
+        function showPassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "text";  // Muda o tipo do campo para texto para exibir a senha
+            button.innerHTML = '👁️'; // Muda o ícone do botão para mostrar o olho aberto
+        }
+    
+        // Função para esconder a senha ao alterar o tipo do campo de "text" para "password"
+        function hidePassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "password"; // Muda o tipo do campo para senha para esconder o texto
+            button.innerHTML = '👁️‍🗨️'; // Muda o ícone do botão para mostrar o olho fechado
+        }
+    </script>
+    
+
+</body>
+</html>

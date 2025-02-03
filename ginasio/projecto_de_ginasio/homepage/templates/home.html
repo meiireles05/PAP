@@ -1,0 +1,662 @@
+<!-- pages/templates/home.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'logo.jpg' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title>hn sports performance</title>
+</head>
+<body>
+
+    <!--header section code-->
+    <header>
+
+        <a href="#home" class="logo">hn <span>sports performance</span></a>
+
+        <div class='bx bx-menu' id="menu-icon"></div>
+
+        <!--Links the menu-->
+        <ul class="navbar">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Serviços</a></li>
+            <li><a href="#horario">Horário</a></li>
+            <li><a href="#about">Sobre</a></li>
+            <li><a href="#plans">Preço</a></li>
+            <li><a href="#review">Revisão</a></li>
+            
+        </ul>
+        
+        <!--show the username-->
+        <div class="top-btn">
+            {% if user.is_authenticated %}
+                <div class="user-profile">
+                    <i class='bx bxs-user-circle'></i>
+                    <span class="username">{{ user.username }}</span>
+                    <!--<a href="{% url 'gym:home' %}" class="nav-btn logout-btn">Logout</a>-->
+                    <form action="{% url 'gym:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            {% else %}  
+                <a href="{% url 'gym:login' %}" class="nav-btn">Junta-te Agora</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!--Home Section Code-->
+
+    <section class="home" id="home">
+        <div class="home-content" data-aos="zoom-in">
+
+            <h3>Constrói o teu</h3>
+            <h1>Físico dos sonhos</h1>
+            <h3><span class="multiple-text">Musculação</span></h3>
+
+            <p>GINÁSIO SEM FIDELIDADE, TUDO INCLUÍDO</p>
+
+            <a href="#" class="btn">Junta-te Agora</a>
+
+        </div>
+
+        <div class="home-img" data-aos="zoom-in">
+            <img src="{% static '../static/Man - 1100x934.png' %}" alt="">
+        </div>
+
+    </section>
+
+    <!--Services Section Code-->
+    <section class="services" id="services">
+        <h2 class="heading" data-aos="zoom-in-down">Outros <span>Serviços</span></h2>
+
+        <div class="services-content" data-aos="zoom-in-up">
+            <div class="row">
+                <img src="{% static 'Importance-of-physical-fitness-2.webp' %}">
+        
+                <h4>Physical Fitness</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'unnamed.png' %}">
+            
+                <h4>Aptidão Física</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'artigo5-1030x541.jpg' %}">
+                
+                <h4>Treino de Força<g</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'images (2).jpg' %}">
+
+                <h4>Perder Gordura</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'images (3).jpg' %}">
+                
+                <h4>Levantamento de Peso</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'pexels-willpicturethis-1954524.jpg' %}">
+                
+                <h4>Corrida</h4>
+            </div>
+        </div>
+
+
+    </section>
+
+
+    <!--Horário Section Code-->
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Horário Anual</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: black;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+            .schedule-title {
+                text-align: center;
+                color: white;
+                font-size: 2.5rem;
+                margin-bottom: 20px;
+            }
+            .schedule-title span {
+                color: #4ade80;
+            }
+            .navigation {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                color: white;
+            }
+            .nav-buttons {
+                display: flex;
+                gap: 10px;
+            }
+            button {
+                padding: 8px 16px;
+                background-color: #60a5fa;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #3b82f6;
+            }
+            .date-selector {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            select {
+                padding: 8px;
+                border-radius: 4px;
+            }
+            .schedule-table {
+                width: 100%;
+                border-collapse: collapse;
+                background-color: white;
+            }
+            .schedule-table th {
+                background-color: #60a5fa;
+                color: white;
+                padding: 10px;
+                text-align: center;
+                border: 1px solid #93c5fd;
+            }
+            .schedule-table td {
+                border: 1px solid #e5e7eb;
+                padding: 10px;
+                text-align: center;
+                position: relative;
+                height: 40px;
+            }
+            .time-column {
+                background-color: #60a5fa;
+                color: white;
+                font-weight: bold;
+            }
+            .appointment {
+                background-color: rgba(8, 54, 119, 1);
+                padding: 5px;
+                border-radius: 4px;
+                margin: -5px;
+                position: relative;
+            }
+            .delete-btn {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: #ef4444;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                display: none;
+            }
+            .appointment:hover .delete-btn {
+                display: block;
+            }
+            td:hover {
+                background-color: #f8fafc;
+                cursor: pointer;
+            }
+            .today {
+                background-color: #f0fdf4;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!--Name the section-->
+            <h1 class="schedule-title">Horário <span>Anual</span></h1>
+            
+            <div class="navigation">
+                <div class="nav-buttons">
+                    <button onclick="changeWeek(-1)">Semana Anterior</button>
+                    <button onclick="changeWeek(1)">Próxima Semana</button>
+                    <button onclick="goToToday()">Hoje</button>
+                </div>
+                <div class="date-selector">
+                    <select id="monthSelect" onchange="updateSchedule()"></select>
+                    <select id="yearSelect" onchange="updateSchedule()"></select>
+                </div>
+            </div>
+    
+            <!-- Tabela para exibir o cronograma/horário -->
+<table class="schedule-table">
+    
+    <!-- Cabeçalho da tabela -->
+    <thead>
+        <tr>
+            <!-- Coluna para exibir os horários -->
+            <th>Hora</th>
+            <!-- Colunas para os dias da semana -->
+            <th>Segunda</th>
+            <th>Terça</th>
+            <th>Quarta</th>
+            <th>Quinta</th>
+            <th>Sexta</th>
+            <th>Sábado</th>
+        </tr>
+    </thead>
+
+    <!-- Corpo da tabela onde as linhas serão adicionadas dinamicamente via JavaScript -->
+    <tbody id="scheduleBody">
+        <!-- As linhas da tabela serão preenchidas dinamicamente com base nos dados do cronograma -->
+    </tbody>
+
+</table>
+
+        </div>
+    
+        <script>
+            // Lista de horários disponíveis para agendamento
+            const timeSlots = [
+                "07:30 - 08:30", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00",
+                "12:00 - 13:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00",
+                "17:00 - 18:00", "18:00 - 19:00", "19:00 - 20:00"
+            ];
+        
+            // Obtém a data atual do sistema
+            let currentDate = new Date();
+        
+            // Recupera os agendamentos salvos no armazenamento local (LocalStorage)
+            // Se não houver dados salvos, inicializa como um objeto vazio
+            let appointments = JSON.parse(localStorage.getItem('yearly_appointments')) || {};
+        
+        
+            function initializeDateSelectors() {
+                const monthSelect = document.getElementById('monthSelect');
+                const yearSelect = document.getElementById('yearSelect');
+                
+                // Initialize months
+                const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                months.forEach((month, index) => {
+                    const option = new Option(month, index);
+                    monthSelect.add(option);
+                });
+                
+                // Initialize years (current year ± 5 years)
+                const currentYear = new Date().getFullYear();
+                for (let year = currentYear - 175; year <= currentYear + 175; year++) {
+                    const option = new Option(year, year);
+                    yearSelect.add(option);
+                }
+                
+                // Set current month and year
+                monthSelect.value = currentDate.getMonth();
+                yearSelect.value = currentDate.getFullYear();
+            }
+    
+            function getMonday(d) {
+                const day = d.getDay();
+                const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+                return new Date(d.setDate(diff));
+            }
+    
+            function formatDate(date) {
+                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+            }
+    
+            function createSchedule() {
+                const tbody = document.getElementById('scheduleBody');
+                tbody.innerHTML = '';
+    
+                const monday = getMonday(currentDate);
+                const dates = [];
+                
+                // Generate dates for the week
+                for (let i = 0; i < 6; i++) {
+                    const date = new Date(monday);
+                    date.setDate(monday.getDate() + i);
+                    dates.push(date);
+                }
+    
+                // Update table headers with dates
+                const headers = document.querySelectorAll('.schedule-table th');
+                dates.forEach((date, index) => {
+                    if (headers[index + 1]) {
+                        headers[index + 1].textContent = `${['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][date.getDay()]} - ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                    }
+                });
+    
+                timeSlots.forEach(time => {
+                    const row = document.createElement('tr');
+                    
+                    // Time column
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = time;
+                    timeCell.className = 'time-column';
+                    row.appendChild(timeCell);
+    
+                    // Day columns
+                    dates.forEach(date => {
+                        const cell = document.createElement('td');
+                        const cellId = `${formatDate(date)}-${time}`;
+                        cell.setAttribute('data-cell-id', cellId);
+    
+                        // Highlight today
+                        const today = new Date();
+                        if (date.toDateString() === today.toDateString()) {
+                            cell.classList.add('today');
+                        }
+    
+                        if (appointments[cellId]) {
+                            cell.innerHTML = createAppointmentHTML(appointments[cellId], cellId);
+                        }
+    
+                        cell.onclick = (e) => {
+                            if (!appointments[cellId] && !e.target.classList.contains('delete-btn')) {
+                                addAppointment(cellId);
+                            }
+                        };
+    
+                        row.appendChild(cell);
+                    });
+    
+                    tbody.appendChild(row);
+                });
+            }
+    
+            function createAppointmentHTML(text, cellId) {
+                return `
+                    <div class="appointment">
+                        ${text}
+                        <button class="delete-btn" onclick="deleteAppointment('${cellId}', event)">×</button>
+                    </div>
+                `;
+            }
+    
+            function addAppointment(cellId) {
+                const text = prompt('Digite o compromisso(Aula/ Treino):');
+                if (text) {
+                    appointments[cellId] = text;
+                    localStorage.setItem('yearly_appointments', JSON.stringify(appointments));
+                    createSchedule();
+                }
+            }
+    
+            function deleteAppointment(cellId, event) {
+                event.stopPropagation();
+                if (confirm('Deseja remover este compromisso?')) {
+                    delete appointments[cellId];
+                    localStorage.setItem('yearly_appointments', JSON.stringify(appointments));
+                    createSchedule();
+                }
+            }
+    
+            function changeWeek(direction) {
+                currentDate.setDate(currentDate.getDate() + (direction * 7));
+                document.getElementById('monthSelect').value = currentDate.getMonth();
+                document.getElementById('yearSelect').value = currentDate.getFullYear();
+                createSchedule();
+            }
+    
+            function goToToday() {
+                currentDate = new Date();
+                document.getElementById('monthSelect').value = currentDate.getMonth();
+                document.getElementById('yearSelect').value = currentDate.getFullYear();
+                createSchedule();
+            }
+    
+            function updateSchedule() {
+                const month = parseInt(document.getElementById('monthSelect').value);
+                const year = parseInt(document.getElementById('yearSelect').value);
+                currentDate = new Date(year, month, currentDate.getDate());
+                createSchedule();
+            }
+    
+            // Initialize the schedule
+            initializeDateSelectors();
+            createSchedule();
+        </script>
+    </body>
+    </html>
+
+    <!-- About Section Code -->
+    <section class="about" id="about">
+        <div class="about-img" data-aos="zoom-in-down">
+            <img src="{% static '360_F_367065497_YzVN8zbE9NTIC8YcsW2Q5SVj83oTSn8r.jpg' %}" alt="">
+        </div>
+        
+        <div class="about-content" data-aos="zoom-in-up">
+            <h2 class="heading">Por Que nos Escolher?</h2>
+
+            <p>A nossa base de membros diversificada cria uma atmosfera amigável e solidária, onde você pode fazer amigos e manter-se motivado</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, enim.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum minima omnis reiciendis adipisci quam sapiente repellat dignissimos.</p>
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Libero repellat quod sit temporibus! Nemo, rerum?</p>
+
+            <a href="#" class="btn">Reserve uma aula gratuita</a>
+        </div>
+
+    </section>
+    
+    <!--Pricing section code-->
+    <section class="plans" id="plans">
+        <h2 class="heading" data-aos="zoom-in-down">Nossos <span>Planos</span></h2>
+
+        <div class="plans-content" data-aos="zoom-in-up">
+
+            <div class="box">
+                <h3>BÁSICO</h3>
+                <h2><span>30€/Mês</span></h2>
+                <ul>
+                    <li>Plano de treino inteligente</li>
+                    <li>Treino em casa</li>
+                </ul>
+                <button class="cta-button" onclick="togglePaymentForm()">
+                    Junta-te Agora
+                    <span class="arrow">→</span>
+                </button>
+            </div>
+            <div class="box">
+                <h3>Clássico</h3>
+                <h2><span>60€/Mês</span></h2>
+                <ul>
+                    <li>Ginásios profissionais</li>
+                    <li>Plano de treino inteligente</li>
+                    <li>Treino em casa</li>
+                </ul>
+                
+                <button class="cta-button" onclick="togglePaymentForm()">
+                    Junta-te Agora
+                    <span class="arrow">→</span>
+                </button>
+            </div>
+            <div class="box">
+                <h3>Profissional</h3>
+                <h2><span>120€/Mês</span></h2>
+                <ul>
+                    <li>Ginásio e aulas de Élite</li>
+                    <li>Ginásios profissionais</li>
+                    <li>Plano de treino inteligente</li>
+                    <li>Treino em casa</li>
+                    <li>Treinador Pessoal</li>
+                </ul>   
+                
+                <button class="cta-button" onclick="togglePaymentForm()">
+                    Junta-te Agora
+                    <span class="arrow">→</span>
+                </button>
+
+        </div>
+        
+    </section>
+
+
+    <!--<div class="container">
+        
+
+        <form id="paymentForm" class="payment-form" style="display: none;">
+            <div class="form-group">
+                <label for="name">Nome Completo</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="card">Número do Cartão</label>
+                <input type="text" id="card" maxlength="16" required>
+            </div>
+
+            <div class="card-details">
+                <div class="form-group">
+                    <label for="expiry">Data de Validade (MM/AA)</label>
+                    <input type="text" id="expiry" maxlength="5" placeholder="MM/AA" required>
+                </div>
+
+                
+            </div>
+
+            <button type="submit" class="cta-button">
+                Finalizar Pagamento
+                <span class="arrow">→</span>
+            </button>
+        </form>
+    </div>-->
+
+    <!--<script>
+        function togglePaymentForm() {
+            const form = document.getElementById('paymentForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aqui você adicionaria a lógica de processamento do pagamento
+            alert('Pagamento processado com sucesso!');
+        });
+
+        // Formatação do número do cartão
+        document.getElementById('card').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+
+        // Formatação da data de validade
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            this.value = this.value
+                .replace(/[^\d]/g, '')
+                .replace(/^(\d{2})/, '$1/')
+                .substr(0, 5);
+        });
+
+        // Formatação do CVV
+        document.getElementById('cvv').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^\d]/g, '');
+        });
+    </script>-->
+</div>
+
+
+    <!--Review Section Code-->
+
+    <section class="review" id="review">
+        <div class="review-box">
+            <h2 class="heading" data-aos="zoom-in-down">Revisão <span>do Cliente</span></h2>
+
+            <div class="wrapper" data-aos="zoom-in-up">
+                <div class="review-item">
+                    <img src="{% static 'Pessoa.jpg' %}">
+                    <h2>Tiago</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo nisi enim aliquid dolorem quia doloremque distinctio eveniet.</p>
+
+                </div>
+
+                <div class="review-item">
+                    <img src="{% static 'gabi.png' %}">
+                    <h2>Gabriela Silva</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo nisi enim aliquid dolorem quia doloremque distinctio eveniet.</p>
+
+                </div>
+
+                <div class="review-item">                       
+                    <img src="{% static '' %}">
+                    <h2>Tomás</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nemo nisi enim aliquid dolorem quia doloremque distinctio eveniet.</p>
+
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!--Footer Section Code-->
+
+    <footer class="footer">
+        <div class="social">
+            <a href="https://www.facebook.com/hugo.nunes.94"><i class='bx bxl-facebook'></i></a>
+            <a href="https://www.instagram.com/hn_sports_performance/"><i class='bx bxl-instagram' ></i></a>
+            <a href="https://www.linkedin.com/in/hugo-nunes-3ba0491a4/?fbclid=PAZXh0bgNhZW0CMTEAAaZt7WNYyMPI1goDnIdcVKXEtg99A_eiuPEaSF0x0UZL6o-Sv7jJ0X9aEzc_aem_89rHOt_JjUxpCMaWLxiVZg"><i class='bx bxl-linkedin' ></i></a>
+        </div>
+
+        <p class="copyright">
+            &copy; hn sports performance 2024 - All Rights Reserved
+        </p>
+    </footer>
+    </body>
+    </html>
+    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        offset: 300,
+        duration: 1400,
+      });
+    </script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>

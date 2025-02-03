@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Realizar Pagamento</h2>
+    <form id="payment-form" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="amount">Valor</label>
+            <input type="number" step="0.01" name="amount" id="amount" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="payment_method">Método de Pagamento</label>
+            <select name="payment_method" id="payment_method" class="form-control" required>
+                <option value="credit_card">Cartão de Crédito</option>
+                <option value="debit_card">Cartão de Débito</option>
+                <option value="pix">PIX</option>
+                <option value="bank_transfer">Transferência Bancária</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Descrição</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Confirmar Pagamento</button>
+    </form>
+</div>
+
+<script>
+document.getElementById('payment-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/payment/process/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Pagamento processado com sucesso!');
+            window.location.href = '/payment/history/';
+        } else {
+            alert('Erro ao processar pagamento: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro ao processar pagamento: ' + error);
+    });
+});
+</script>

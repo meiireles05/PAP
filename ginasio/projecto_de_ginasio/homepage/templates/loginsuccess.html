@@ -1,0 +1,9 @@
+
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>Bem-vindo, {{ user.username }}!</p>
+    {% else %}
+        <p>Por favor, faça login</p>
+    {% endif %}
+{% endblock %}
