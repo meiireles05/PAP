@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000000;
+        }
+
+        .register-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .register-header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: #f8f9fa;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .forgot-password a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-custom  {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: rgb(28, 101, 203);
+            color: white;
+        }   
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Registro</h1>
+        <form action="/register/" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <i>👤</i>
+                <input type="text" name="username" placeholder="Nome de usuário" required>
+            </div>
+            <div class="form-group">
+                <i>📞</i>
+                <input type="telefone" name="telefone" placeholder="Telefone" required>
+            </div>
+            <div class="form-group">
+                <i>🔒</i>
+                <input type="password" name="password1" id="password1" placeholder="Senha" required>
+                <button type="button" 
+                        onmousedown="showPassword('password1', this)"
+                        onmouseup="hidePassword('password1', this)"
+                        onmouseleave="hidePassword('password1', this)"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                               background: none; border: none; cursor: pointer;">
+                    👁️‍🗨️
+                </button>
+            </div>
+            
+            <div class="form-group">
+                <i>🔒</i>
+                <input type="password" name="password2" id="password2" placeholder="Confirmar senha" required>
+                <button type="button" 
+                        onmousedown="showPassword('password2', this)"
+                        onmouseup="hidePassword('password2', this)"
+                        onmouseleave="hidePassword('password2', this)"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                               background: none; border: none; cursor: pointer;">
+                    👁️‍🗨️
+                </button>
+            </div>
+            <button type="submit" class="btn-custom btn-primary">Registrar</button>
+            <a href="{% url 'gym:login' %}" class="btn-custom btn-secondary">Voltar para o login</a>
+        </form>
+    </div>
+
+    <script>
+        function showPassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "text";
+            button.innerHTML = '👁️'; // olho aberto
+        }
+    
+        function hidePassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "password";
+            button.innerHTML = '👁️‍🗨️'; // olho fechado
+        }
+    </script>
+
+</body>
+</html>

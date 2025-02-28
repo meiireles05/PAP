@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        .codigo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            padding: 10px;
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Alteração de Password</h2>
+    <p>Foi solicitada a alteração da sua password.</p>
+    <p>Use o seguinte código para confirmar a alteração:</p>
+    <div class="codigo">{{ codigo }}</div>
+    <p>Este código é válido por {{ validade_minutos }} minutos.</p>
+    <p>Se não solicitou esta alteração, por favor ignore este email.</p>
+    <br>
+    <p>Atenciosamente,<br>Sua Equipe</p>
+</body>
+</html>
+
+<!-- templates/emails/codigo_reset.txt -->
+Alteração de Password
+
+Foi solicitada a alteração da sua password.
+Use o seguinte código para confirmar a alteração:
+
+{{ codigo }}
+
+Este código é válido por {{ validade_minutos }} minutos.
+
+Se não solicitou esta alteração, por favor ignore este email.
+
+Atenciosamente,
+Sua Equipe

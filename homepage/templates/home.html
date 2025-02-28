@@ -1,0 +1,1070 @@
+<!-- pages/templates/home.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'logo.jpg' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>hn sports performance</title>
+</head>
+<body>
+    <header>
+
+        <a href="#home" class="logo">hn <span>sports performance</span></a>
+
+        <div class='bx bx-menu' id="menu-icon"></div>
+
+        <ul class="navbar">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Serviços</a></li>
+            {% if request.user.is_authenticated %}
+                <li><a href={% url "gym:schedule" %}>Horário</a></li>
+            {% endif %}
+            <li><a href="#about">Porque</a></li>
+            <li><a href="#plans">Preços</a></li>
+            <li><a href="#review">Revisão</a></li>
+            
+        </ul>
+
+        <div class="top-btn">
+    {% if user.is_authenticated %}
+        <div class="user-profile">
+            <i class='bx bxs-user-circle profile-trigger' data-id="{{ user.id }}"></i>
+            <span class="username profile-trigger" data-id="{{ user.id }}">{{ user.username }}</span>
+            <a href="{% url 'gym:logout' %}" class="nav-btn logout-btn">Logout</a>
+        </div>
+        
+        <!-- Modal para informações do perfil -->
+        <div id="perfil-modal" class="modal" style="display: none;">
+            <div class="modal-content"> 
+                <span class="fechar">&times;</span>
+                <div id="perfil-info">
+                    <!-- Os dados do perfil serão inseridos aqui -->
+                </div>
+            </div>
+        </div>
+    {% else %}  
+        <a href="{% url 'gym:login' %}" class="nav-btn">Junta-te Agora</a>
+    {% endif %}
+</div>
+
+{% for usuario in usuarios %}
+    <div class="usuario">
+        <a href="#" class="nome-usuario" data-id="{{ usuario.id }}">{{ usuario.username }}</a>
+    </div>
+{% endfor %}
+
+<style>
+    .profile-trigger {
+        cursor: pointer;
+    }
+    
+    .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        position: relative;
+    }
+    
+    .fechar {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .fechar:hover {
+        color: black;
+    }
+    
+    #perfil-info {
+        padding: 10px;
+        margin-top: 10px;
+        color: black;
+    }
+    
+    #perfil-info h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    #perfil-info img {
+        display: block;
+        margin: 15px auto;
+        border-radius: 50%;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Selecionar os elementos que podem acionar o modal
+        var triggers = document.querySelectorAll('.profile-trigger');
+        var modal = document.getElementById('perfil-modal');
+        var perfilInfo = document.getElementById('perfil-info');
+        var fechar = document.querySelector('.fechar');
+        
+        // Adicionar evento de clique para cada trigger
+        triggers.forEach(function(trigger) {
+            trigger.addEventListener('click', function() {
+                var usuarioId = this.getAttribute('data-id');
+                
+                // Fazer requisição AJAX para obter dados do perfil
+                fetch(`/perfil/${usuarioId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Preencher o modal com as informações
+                        perfilInfo.innerHTML = `
+                            <h2>${data.username}</h2>
+                            <p><strong>Email:</strong> ${data.email}</p>
+                            <p><strong>Bio:</strong> ${data.bio || 'Não informado'}</p>
+                            <p><strong>Telefone:</strong> ${data.telefone || 'Não informado'}</p>
+                        `;
+                        
+                        // Exibir o modal usando flex para centralizar
+                        modal.style.display = 'flex';
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar perfil:', error);
+                        perfilInfo.innerHTML = '<p>Erro ao carregar informações do perfil.</p>';
+                        modal.style.display = 'flex';
+                    });
+            });
+        });
+        
+        // Fechar o modal quando clicar no X
+        fechar.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // Fechar o modal quando clicar fora dele
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+        <!-- Modal para informações do perfil -->
+        <div id="perfil-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="fechar">&times;</span>
+                <div id="perfil-info">
+                <!-- Os dados do perfil serão inseridos aqui -->
+                </div>
+            </div>
+        </div>
+                
+
+        <style>
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                color: var(--text-color);
+            }
+            
+            .user-profile i {
+                font-size: 2.4rem;
+                color: var(--main-color);
+            }
+            
+            .user-profile .username {
+                font-size: 1.6rem;
+                font-weight: 500;
+            }
+            
+            .logout-btn {
+                font-size: 1.4rem;
+                padding: 0.8rem 1.6rem;
+            }
+            
+            /* Responsividade */
+            @media (max-width: 768px) {
+                .user-profile {
+                    gap: 0.5rem;
+                }
+                
+                .user-profile .username {
+                    font-size: 1.4rem;
+                }
+                
+                .logout-btn {
+                    font-size: 1.2rem;
+                    padding: 0.6rem 1.2rem;
+                }
+            }
+            </style>
+        
+    </header>
+
+    <!--Home Section Code-->
+
+    <section class="home" id="home">
+        <div class="home-content" data-aos="zoom-in">
+
+            <h3>
+                Constroi o teu </h3>
+            <h1>Fisico dos sonhos</h1>
+            <h3><span class="multiple-text">Musculação</span></h3>
+
+            <p>GINÁSIO SEM FIDELIDADE, TUDO INCLUÍDO</p>
+
+
+        </div>
+
+        <div class="home-img" data-aos="zoom-in">
+            <img src="{% static 'imagem principal.png' %}">
+        </div>
+
+    </section>
+
+    
+
+    <!--Services Section Code-->
+
+    <section class="services" id="services">
+        <h2 class="heading" data-aos="zoom-in-down">Outros <span>Serviços</span></h2>
+         
+        <div class="services-content" data-aos="zoom-in-up">
+            <div class="row">
+                <img src="{% static 'Importance-of-physical-fitness-2.webp' %}">
+        
+                <h4>Aptidão física</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'artigo5-1030x541.jpg' %}">
+                
+                <h4>Treino de Força</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'images (2).jpg' %}">
+
+                <h4>Losing Fat</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'images (3).jpg' %}">
+                
+                <h4>Weight Lifting</h4>
+            </div>
+
+            <div class="row">
+                <img src="{% static 'corrida.jpg' %}">
+                
+                <h4>Corrida</h4>
+            </div>
+        </div>
+
+
+    </section>
+
+    <!-- About Section Code -->
+
+    <section class="about" id="about">
+        <div class="about-img" data-aos="zoom-in-down">
+            <img src="{% static '360_F_367065497_YzVN8zbE9NTIC8YcsW2Q5SVj83oTSn8r.jpg' %}" alt="">
+        </div>
+        
+        <div class="about-content" data-aos="zoom-in-up">
+            <h2 class="heading">Por que nos escolher?</h2>
+
+            <p>A nossa base de membros diversificada cria uma atmosfera amigável e solidária, onde você pode fazer amigos e manter-se motivado</p>
+            
+            <a href="#" class="btn">Reserve uma aula gratuita</a>
+        </div>
+
+    </section>
+    
+    <!--Pricing section code-->
+    <section class="plans" id="plans">
+        <h2 class="heading" data-aos="zoom-in-down">Outros <span>Planos</span></h2>
+
+        
+        <div class="plans-content" data-aos="zoom-in-up">
+
+            <div class="box">
+                <h3>BÁSICO</h3>
+                <h2><span>3,99€/Semana</span></h2>
+                <ul>
+                    <li>Plano de treino inteligente</li>
+                    <li>Treino em casa</li>
+                </ul>
+                <a href="#" class="payment-button" data-plan="Plano Básico - 3,99€/Week">
+                    Junta-te Agora
+                    <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+            <div class="box">
+                <h3>Clássico</h3>
+                <h2><span>5,49€/Semana</span></h2>
+                <ul>
+                    <li>Professional gyms</li>
+                    <li>Smart training plan</li>
+                    <li>Home training</li>
+                
+                <style>
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        font-family: Arial, sans-serif;
+                    }
+                    
+                    .cta-button {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 12px 24px;
+                        background-color: #007bff;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 4px;
+                        transition: all 0.3s ease;
+                        border: none;
+                        cursor: pointer;
+                    }
+                    
+                    .cta-button:hover {
+                        background-color: #0056b3;
+                        transform: translateX(5px);
+                    }
+                    
+                    .arrow {
+                        font-size: 1.2em;
+                    }
+                    
+                    /* Faz o formulário aparecer CENTRALIZADO na TELA */
+                    .payment-form {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background-color: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+                        width: 90%;
+                        max-width: 400px; /* Define um tamanho máximo */
+                        display: none; /* Mantém oculto até ser ativado */
+                        z-index: 1001;
+                    }
+                    
+                    /* Fundo escuro ao abrir o formulário */
+                    .overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: none;
+                        z-index: 1000;
+                    }
+                    
+                    .form-group {
+                        margin-bottom: 15px;
+                    }
+                    
+                    .form-group label {
+                        display: block;
+                        margin-bottom: 5px;
+                        font-weight: bold;
+                        color: #000;
+                    }
+                    
+                    .form-group input {
+                        width: 100%;
+                        padding: 8px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        font-size: 16px;
+                    }
+                    
+                    /* Responsividade para telas menores */
+                    @media (max-width: 500px) {
+                        .payment-form {
+                            width: 90%;
+                        }
+                    }                    
+                </style>                               
+                    
+                <a href="#" class="payment-button" data-plan="Plano Clássico - 5,49€/Week">
+                    Junta-te Agora
+                    <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+            <div class="box">
+                <h3>Profissional</h3>
+                <h2><span>6,99€/Week</span></h2>
+                <ul>
+                    <li>Elite gym and classes</li>
+                    <li>Professional gyms</li>
+                    <li>Smart training plan</li>
+                    <li>Home training</li>
+                    <li>Personal Trainer</li>
+                </ul>
+                <a href="#" class="payment-button" data-plan="Plano Profissional - 6,99€/Week">
+                    Junta-te Agora
+                    <i class='bx bx-right-arrow-alt'></i>
+                </a>
+            </div>
+            <div class="overlay" id="overlay"></div>
+<div class="payment-form" id="payment-form">
+    <h2 style="margin-bottom: 20px; color: #333; text-align: center;">Formulário de Pagamento</h2>
+    <form id="checkout-form">
+        <div class="form-group">
+            <label for="plan-name">Plano Selecionado</label>
+            <input type="text" id="plan-name" readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Nome Completo</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+            <label for="card-number">Número do Cartão</label>
+            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+                <label for="expiry">Validade (MM/AA)</label>
+                <input type="text" id="expiry" placeholder="MM/AA" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" placeholder="123" required>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" id="close-form" style="flex: 1; padding: 10px; background-color: #ccc; color: #333; border-radius: 4px; cursor: pointer;">Cancelar</button>
+            <button type="submit" style="flex: 2; padding: 10px; background-color: rgb(28, 101, 203); color: white; border-radius: 4px; cursor: pointer;">Pagar Agora</button>
+        </div>
+    </form>
+</div>
+
+<!-- Adicione este script diretamente antes do fechamento da tag body -->
+        <script>
+            // Função para ser chamada quando clicar em qualquer botão de pagamento
+            function setupPaymentButtons() {
+                console.log("Configurando botões de pagamento"); // Debug
+                
+                // Adiciona eventos de clique a todos os botões de plano
+                var buttons = document.querySelectorAll('.box a');
+                console.log("Botões encontrados:", buttons.length); // Debug
+                
+                buttons.forEach(function(button) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Obtém informações do plano a partir do texto do botão e do cabeçalho do plano
+                        var boxElement = this.closest('.box');
+                        var planName = boxElement.querySelector('h3').textContent;
+                        var planPrice = boxElement.querySelector('h2 span').textContent;
+                        var planInfo = planName + " - " + planPrice;
+                        
+                        // Preenche o campo do plano no formulário
+                        document.getElementById('plan-name').value = planInfo;
+                        
+                        // Mostra o overlay e o formulário
+                        document.getElementById('overlay').style.display = 'block';
+                        document.getElementById('payment-form').style.display = 'block';
+                        
+                        console.log("Formulário aberto para:", planInfo); // Debug
+                    });
+                });
+                
+                // Configura o fechamento do formulário
+                document.getElementById('close-form').addEventListener('click', function() {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('payment-form').style.display = 'none';
+                });
+                
+                document.getElementById('overlay').addEventListener('click', function() {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('payment-form').style.display = 'none';
+                });
+                
+                document.getElementById('payment-form').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+                
+                // Processa o envio do formulário
+                document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Pagamento processado com sucesso!');
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('payment-form').style.display = 'none';
+                });
+            }
+            
+            // Executa quando o DOM estiver completamente carregado
+            document.addEventListener('DOMContentLoaded', setupPaymentButtons);
+            
+            // Como backup, também tenta configurar após um pequeno atraso
+            // (útil se houver scripts assíncronos carregando o conteúdo)
+            setTimeout(setupPaymentButtons, 1000);
+        </script>
+            </head>
+            <body>
+                
+
+    </section>
+
+    
+
+    <section class="review" id="review">
+        <div class="review-box">
+            <h2 class="heading" data-aos="zoom-in-down">Revisão do <span>Cliente</span></h2>
+
+            <div class="wrapper" data-aos="zoom-in-up">
+                <div class="review-item">
+                    <img src="{% static 'Pessoa.jpg' %}">
+                    <h2>Tiago Meireles</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                </div>
+
+                <div class="review-item">
+                    <img src="{% static 'Pessoa.jpg' %}">
+                    <h2>Luís Santos</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                </div>
+
+                <div class="review-item">                       
+                    <img src="{% static 'Pessoa.jpg' %}">
+                    <h2>Jorge Mendes</h2>
+                    <div class="rating">
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                        <i class='bx bxs-star' id="Star"></i>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <footer class="footer">
+        <div class="social">
+            <a href="https://www.facebook.com/hugo.nunes.94"><i class='bx bxl-facebook'></i></a>
+            <a href="https://www.instagram.com/hn_sports_performance/"><i class='bx bxl-instagram' ></i></a>
+            <a href="https://www.linkedin.com/in/hugo-nunes-3ba0491a4/?fbclid=PAZXh0bgNhZW0CMTEAAaZt7WNYyMPI1goDnIdcVKXEtg99A_eiuPEaSF0x0UZL6o-Sv7jJ0X9aEzc_aem_89rHOt_JjUxpCMaWLxiVZg"><i class='bx bxl-linkedin' ></i></a>
+        </div>
+
+        <p class="copyright">
+            &copy; hn_sports_performance 2024 - All Rights Reserved
+        </p>
+    </footer>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        list-style: none;
+        border: none;
+        outline: none;
+        scroll-behavior: smooth;
+        font-family: -apple-system, sans-serif;
+    }
+    
+    :root {
+        --bg-color: #000;
+        --snd-bg-color: #111;
+        --text-color: #fff;
+        --main-color: rgb(28, 101, 203);
+    }
+    
+    html {
+        font-size: 62.5%;
+        overflow-x: hidden;
+    }
+    
+    body {
+        background: var(--bg-color);
+        color: var(--text-color);
+    }
+    
+    section {
+        min-height: 100vh;
+        padding: 10rem 8% 2rem;
+    }
+    
+    /* Header Section Code */
+    
+    header {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem 9%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        transition: all 0.5s ease;
+    }
+    
+    .logo {
+        font-size: 3rem;
+        color: var(--text-color);
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+    
+    .logo:hover {
+        transform: scale(1.1);
+    }
+    
+    span {
+        color: var(--main-color);
+    }
+    
+    .navbar {
+        display: flex;
+    }
+    
+    .navbar a {
+        font-size: 1.8rem;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-left: 4rem;
+        transition: all 0.5s ease;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .navbar a:hover,
+    .navbar a.active {
+        color: var(--main-color);
+        border-bottom: 3px solid var(--main-color);
+    }
+    
+    .nav-btn {
+        display: inline-block;
+        padding: 1rem 2.8rem;
+        background: transparent;
+        color: var(--main-color);
+        border: 2px solid var(--main-color);
+        border-radius: 1rem;
+        font-size: 1.6rem;
+        font-weight: 600;
+        transition: all 0.5s ease;
+    }
+    
+    .nav-btn:hover {
+        background: var(--main-color);
+        color: var(--text-color);
+        box-shadow: 0 0 18px var(--main-color);
+    }
+    
+    #menu-icon {
+        font-size: 3.6rem;
+        color: var(--main-color);
+        cursor: pointer;
+        display: none;
+    }
+    
+    /* Home Section Code */
+    
+    .home {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .home-content h3 {
+        font-size: 5rem;
+        font-weight: 700;
+    }
+    
+    .home-content span {
+        font-size: 4rem;
+        font-weight: 550;
+    }
+    
+    span {
+        color: var(--main-color);
+    }
+    
+    .home-content h1 {
+        font-size: 5.6rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    
+    .home-img img {
+        width: 45vw;
+    }
+    
+    .home-img::before {
+        content: 'FITNESS';
+        position: absolute;
+        top: 10%;
+        left: 30%;
+        transform: translateX(-50%);
+        font-size: 20rem;
+        font-weight: 400;
+        line-height: 20rem;
+        color: var(--text-color);
+        opacity: 0.1;
+        z-index: -1;
+    }
+    
+    .home-content p {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+        margin-top: 2rem;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 1rem 2.8rem;
+        background: var(--main-color);
+        border-radius: 1rem;
+        box-shadow: none;
+        font-size: 1.6rem;
+        color: var(--bg-color);
+        letter-spacing: 0.1rem;
+        font-weight: 600;
+        transition: 0.5s ease;
+    }
+    
+    .btn:hover {
+        color: var(--text-color);
+        box-shadow: 0 0 1.6rem var(--main-color);
+    }
+    
+    .heading {
+        text-align: center;
+        font-size: 6.5rem;
+    }
+    
+    /* SERVICES SECTION CODE */
+    
+    .services {
+        background: var(--snd-bg-color);
+    }
+    
+    .services-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, auto));
+        align-items: center;
+        gap: 2.3rem;
+        margin-top: 4.1rem;
+    }
+    
+    .row {
+        background: var(--bg-color);
+        border-radius: 27px;
+        border: 1px solid transparent;
+        box-shadow: 0 0 5px var(--main-color);
+        padding: 20px;
+        transition: all 0.5s ease;
+    }
+    
+    .row img {
+        height: auto;
+        width: 100%;
+        border-radius: 27px;
+        margin-bottom: 1.4rem;
+    }
+    
+    .row h4 {
+        font-size: 25px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    .row:hover {
+        border: 1px solid var(--main-color);
+        transform: translateY(-5px) scale(1.04);
+        cursor: pointer;
+    }
+    
+    /* About Section Code */
+    
+    .about {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .about-img img {
+        width: 50vw;
+        border: 2px solid var(--text-color);
+        border-radius: 1rem;
+        transition: 0.5s ease;
+    }
+    
+    .about-img img:hover {
+        transform: scale(1.02);
+        border: 2px solid var(--main-color);
+    }
+    
+    .about-content .heading {
+        text-align: center;
+        font-size: 6rem;
+    }
+    
+    .about-content {
+        padding: 0 3rem;
+    }
+    
+    .about-content h2 {
+        text-align: left;
+        line-height: 1.2;
+    }
+    
+    .about-content p {
+        font-size: 1.6rem;
+        margin: 2rem 0 2rem;
+    }
+    
+    /* Pricing Section Code */
+     
+    .plans {
+        background: var(--snd-bg-color);
+    }
+    
+    .plans-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+        align-items: center;
+        gap: 2.3rem;
+        margin-top: 4.2rem;
+    }
+    
+    .box {
+        padding: 30px 30px 50px 30px;
+        height: 40rem;
+        background: var(--bg-color);
+        border-radius: 28px;
+        border: 1px solid transparent;
+        box-shadow: 0 0 5px var(--main-color);
+        transition: all 0.5s ease;
+        cursor: pointer;
+    }
+    
+    .box h3 {
+        font-size: 35px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .box h2 {
+        font-size: 43px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+    
+    .box ul li {
+        list-style: disc;
+        font-size: 1.7rem;
+        padding-bottom: 1.2rem;
+    }
+    
+    .box a {
+        display: inline-block;
+        font-size: 22px;
+        line-height: 1.2rem;
+        font-weight: 700;
+        padding: 7px 0;
+        color: var(--text-color);
+        border-bottom: 2px solid #5d6c83;
+        transition: all 0.5s ease;
+    }
+    
+    .box i {
+        vertical-align: middle;
+        font-size: 25px;
+        color: var(--main-color);
+        margin-left: 5px;
+    }
+    
+    .box a:hover {
+        border-bottom: 2px solid var(--main-color);
+    }
+    
+    .box:hover {
+        border: 1px solid var(--main-color);
+        transform: translateY(-5px) scale(1.03);
+    }
+    
+    /* Review Section Code */
+    
+    .review {
+        background: var(--bg-color);
+    }
+    
+    .review-box {
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    .review .heading {
+        margin-bottom: 5rem;
+    }
+    
+    .review-box img {
+        width: 15rem;
+        border-radius: 50%;
+        border: 3px solid var(--main-color);
+    }
+    
+    .wrapper {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 3rem;
+    }
+    
+    .review-item {
+        min-height: 450px;
+        min-width: 280px;
+        background: var(--snd-bg-color);
+        border: 3px solid rgba(238, 238, 238, 0.3);
+        border-radius: 2rem;
+        margin: 0 2rem;
+        padding: 30px 40px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        color: #fff;
+        transition: 0.5s ease-in-out;
+    }
+    
+    .review-item:hover {
+        border: 3px solid var(--main-color);
+        transform: translateY(-5px) scale(1.03);
+    }
+    
+    .review-item h2 {
+        font-size: 2.8rem;
+    }
+    
+    .review-item p {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        text-align: center;
+    }
+    
+    #Star {
+        color: gold;
+        font-size: 2rem;
+    }
+    
+    /* Footer Section Code */
+    
+    .footer {
+        position: relative;
+        bottom: 0;
+        width: 100;
+        padding: 40px 0;
+        background: var(--snd-bg-color);
+    }
+    
+    .footer .social {
+        text-align: center;
+        padding-bottom: 20px;
+        color: var(--main-color);
+    }
+    
+    .footer .social a {
+        font-size: 25px;
+        color: var(--main-color);
+        border: 2px solid var(--main-color);
+        width: 42px;
+        height: 42px;
+        line-height: 42px;
+        display: inline-block;
+        text-align: center;
+        border-radius: 50%;
+        margin: 0 10px;
+        transition: 0.3s ease-in-out;
+    }
+    
+    .footer .social a:hover {
+        transform: scale(1.2) translateY(-10px);
+        background: var(--main-color);
+        color: #131313;
+        box-shadow: 0 0 25px var(--main-color);
+    }
+    
+    .footer .copyright {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 16px;
+        color: var(--text-color);
+    }
+</style>
+    </body>
+
+    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        offset: 300,
+        duration: 1400,
+      });
+    </script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

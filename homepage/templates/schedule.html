@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horário Anual - HN Sports Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+        }
+        
+        /* Barra de navegação */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #000;
+            width: 100%;
+            border-bottom: 1px solid #222;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo {
+            color: white;
+            margin-right: 10px;
+        }
+        
+    
+
+        
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin: 0 15px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            color: rgb(28, 101, 203);
+        }
+        
+        .join-button {
+            background-color: transparent;
+            color: rgb(28, 101, 203);
+            border: 2px solid rgb(28, 101, 203);
+            border-radius: 7px;
+            padding: 10px 25px;
+            margin-right: 110px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .join-button:hover {
+            background-color: rgb(28, 101, 203);
+            color: #000;
+        }
+        
+        /* Container para o conteúdo principal */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        /* Estilos para o horário */
+        .schedule-title {
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            margin: 30px 0;
+        }
+        
+        .schedule-title span {
+            color: rgb(28, 101, 203);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+            flex-wrap: wrap;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background-color: rgb(28, 101, 203);
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: rgb(28, 101, 203);
+        }
+        
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            border: none;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #111;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .schedule-table th {
+            background-color: rgb(28, 101, 203);
+            color: black;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #222;
+            font-weight: bold;
+        }
+        
+        .schedule-table td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            height: 40px;
+            color: white;
+        }
+        
+        
+        .time-column {
+            background-color: #222;
+            color:rgb(28, 101, 203);
+            font-weight: bold;
+        }
+        
+        .appointment {
+            background-color: rgb(28, 101, 203);
+            padding: 8px;
+            border-radius: 4px;
+            margin: -8px;
+            position: relative;
+            font-size: 0.85rem;
+            color: white;
+            font-weight: bold;
+            border: 1px solid rgb(28, 101, 203);
+        }
+        
+        .delete-btn {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ff4545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: none;
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+        
+        .appointment:hover .delete-btn {
+            display: block;
+        }
+        
+        td:hover {
+            background-color: #222;
+            cursor: pointer;
+        }
+        
+        .today {
+            background-color: rgba(69, 255, 202, 0.1);
+        }
+        
+        /* Modal para adicionar compromisso */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #222;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            min-width: 300px;
+        }
+        
+        .modal p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .modal select {
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: #333;
+            color: white;
+            border: 1px solid rgb(255, 255, 255);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            
+            .nav-menu li {
+                margin: 10px 0;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .schedule-table {
+                font-size: 0.8rem;
+            }
+            
+            .schedule-table th, .schedule-table td {
+                padding: 5px;
+            }
+            
+            .schedule-title {
+                font-size: 2.2rem;
+            }
+        }
+
+        .logo {
+            font-size: 2rem;
+            color: var(--text-color);
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+        
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        
+        span {
+            color: rgb(28, 101, 203);
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegação -->
+    <nav class="navbar">
+        
+        <a href="{% url "gym:home" %}" class="logo">hn<span> sports performance</span></a>
+        
+        
+        
+        
+        <a href="{% url "gym:login" %}" class="join-button">Junta-te Agora</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="schedule-title">Horário <span>Anual</span></h1>
+        
+        <div class="navigation">
+            <div class="nav-buttons">
+                <button onclick="changeWeek(-1)">Semana Passada</button>
+                <button onclick="changeWeek(1)">Próxima Semana</button>
+                <button onclick="goToToday()">Hoje</button>
+            </div>
+            <div class="date-selector">
+                <select id="monthSelect" onchange="updateSchedule()"></select>
+                <select id="yearSelect" onchange="updateSchedule()"></select>
+            </div>
+        </div>
+
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>Horas</th>
+                    <th>Segunda - Feira</th>
+                    <th>Terça - Feira</th>
+                    <th>Quarta - Feira</th>
+                    <th>Quinta - Feira</th>
+                    <th>Sexta - Feira</th>
+                    <th>Sábado</th>
+                </tr>
+            </thead>
+            <tbody id="scheduleBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const timeSlots = [
+            "07:30 - 08:30", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00",
+            "12:00 - 13:00", "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00",
+            "17:00 - 18:00", "18:00 - 19:00", "19:00 - 20:00"
+        ];
+    
+        let currentDate = new Date();
+        let appointments = JSON.parse(localStorage.getItem('yearly_appointments')) || {};
+    
+        function initializeDateSelectors() {
+            const monthSelect = document.getElementById('monthSelect');
+            const yearSelect = document.getElementById('yearSelect');
+            
+            const months = ['Janeiro', 'Febreiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            months.forEach((month, index) => {
+                const option = new Option(month, index);
+                monthSelect.add(option);
+            });
+            
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear - 5; year <= currentYear + 5; year++) {
+                const option = new Option(year, year);
+                yearSelect.add(option);
+            }
+            
+            monthSelect.value = currentDate.getMonth();
+            yearSelect.value = currentDate.getFullYear();
+        }
+
+        function getMonday(d) {
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatDate(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function createSchedule() {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+
+            const monday = getMonday(currentDate);
+            const dates = [];
+            
+            for (let i = 0; i < 6; i++) {
+                const date = new Date(monday);
+                date.setDate(monday.getDate() + i);
+                dates.push(date);
+            }
+
+            const headers = document.querySelectorAll('.schedule-table th');
+            dates.forEach((date, index) => {
+                if (headers[index + 1]) {
+                    headers[index + 1].textContent = `${['Domingo', 'Segunda - Feira', 'Terça - Feira', 'Quarta - Feira', 'Quinta - Feira', 'Sexta - Feira', 'Sábado'][date.getDay()]} - ${date.getDate()}/${date.getMonth() + 1}`;
+                }
+            });
+
+            timeSlots.forEach(time => {
+                const row = document.createElement('tr');
+                
+                const timeCell = document.createElement('td');
+                timeCell.textContent = time;
+                timeCell.className = 'time-column';
+                row.appendChild(timeCell);
+
+                dates.forEach(date => {
+                    const cell = document.createElement('td');
+                    const cellId = `${formatDate(date)}-${time}`;
+                    cell.setAttribute('data-cell-id', cellId);
+
+                    const today = new Date();
+                    if (date.toDateString() === today.toDateString()) {
+                        cell.classList.add('hoje');
+                    }
+
+                    if (appointments[cellId]) {
+                        cell.innerHTML = createAppointmentHTML(appointments[cellId], cellId);
+                    }
+
+                    cell.onclick = (e) => {
+                        if (!appointments[cellId] && !e.target.classList.contains('delete-btn')) {
+                            addAppointment(cellId);
+                        }
+                    };
+
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+        }
+
+        function createAppointmentHTML(text, cellId) {
+            return `
+                <div class="appointment">
+                    ${text}
+                    <button class="delete-btn" onclick="deleteAppointment('${cellId}', event)">×</button>
+                </div>
+            `;
+        }
+
+        function addAppointment(cellId) {
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <p>Escolha o compromisso:</p>
+                <select id="appointmentType">
+                    <option value="Aula">Aula</option>
+                    <option value="Treino">Treino</option>
+                </select>
+                <div class="modal-buttons">
+                    <button id="confirmBtn">Confirmar</button>
+                    <button id="cancelBtn" style="background-color: #333; color: white;">Cancelar</button>
+                </div>
+            `;
+        
+            document.body.appendChild(modal);
+        
+            document.getElementById('confirmBtn').addEventListener('click', function () {
+                const text = document.getElementById('appointmentType').value;
+                appointments[cellId] = text;
+                localStorage.setItem('yearly_appointments', JSON.stringify(appointments));
+                createSchedule();
+                modal.remove(); 
+            });
+        
+            document.getElementById('cancelBtn').addEventListener('click', function () {
+                modal.remove();
+            });
+        }
+        
+        function deleteAppointment(cellId, event) {
+            event.stopPropagation();
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <p>Você deseja remover este compromisso?</p>
+                <div class="modal-buttons">
+                    <button id="confirmDeleteBtn">Sim</button>
+                    <button id="cancelDeleteBtn" style="background-color: #333; color: white;">Não</button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                delete appointments[cellId];
+                localStorage.setItem('yearly_appointments', JSON.stringify(appointments));
+                createSchedule();
+                modal.remove();
+            });
+            
+            document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+                modal.remove();
+            });
+        }
+
+        function changeWeek(direction) {
+            currentDate.setDate(currentDate.getDate() + (direction * 7));
+            document.getElementById('monthSelect').value = currentDate.getMonth();
+            document.getElementById('yearSelect').value = currentDate.getFullYear();
+            createSchedule();
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            document.getElementById('monthSelect').value = currentDate.getMonth();
+            document.getElementById('yearSelect').value = currentDate.getFullYear();
+            createSchedule();
+        }
+
+        function updateSchedule() {
+            const month = parseInt(document.getElementById('monthSelect').value);
+            const year = parseInt(document.getElementById('yearSelect').value);
+            currentDate = new Date(year, month, currentDate.getDate());
+            createSchedule();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDateSelectors();
+            createSchedule();
+        });
+    </script>
+</body>
+</html>

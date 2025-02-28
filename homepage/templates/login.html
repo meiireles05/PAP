@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000000;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background: #f8f9fa;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin: 0.5rem 0 1rem;
+        }
+
+        .forgot-password a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            gap: 0.5rem;
+        }
+        
+
+        .btn-primary {
+            background-color: rgb(28, 101, 203);
+            color: rgb(28, 101, 203);
+            border: 2px solid rgb(28, 101, 203);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            color: black;
+        }
+
+        .btn-social {
+            background: white;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .btn-google {
+            color: #db4437;
+        }
+
+        .btn-facebook {
+            color: #4267B2;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .create-account {
+            display: block;
+            text-align: center;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .create-account:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Bem-vindo</h1>
+            <p>Por favor, faça login para continuar</p>
+        </div>
+        <form action="/login/" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <i class="fas fa-user">👤</i>
+                <input type="text" name="username" placeholder="Usuário">
+            </div>
+            <div class="form-group">
+                <i>🔒</i>
+                <input type="password" name="password" id="password" placeholder="Senha" required>
+                <button type="button" 
+                        onmousedown="showPassword('password1', this)"
+                        onmouseup="hidePassword('password1', this)"
+                        onmouseleave="hidePassword('password1', this)"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); 
+                               background: none; border: none; cursor: pointer;">
+                    👁️‍🗨️
+                </button>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="password_recovery">Esqueceu a senha?</a>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                 Entrar
+            </button>
+            <div class="divider">ou</div>
+            
+            <a href="{% url 'gym:registro' %}" class="create-account">
+                Criar nova conta
+            </a>
+        </form>
+    </div>
+
+    <script>
+        function showPassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "text";
+            button.innerHTML = '👁️'; // olho aberto
+        }
+        
+        function hidePassword(fieldId, button) {
+            const passwordField = document.getElementById(fieldId);
+            passwordField.type = "password";
+            button.innerHTML = '👁️‍🗨️'; // olho fechado
+        }
+    </script>
+
+</body>
+</html>
