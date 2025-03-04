@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários do Ginásio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Horários do Ginásio</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Dia da Semana</th>
+                <th>Aula</th>
+                <th>Instrutor</th>
+                <th>Hora de Início</th>
+                <th>Duração</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horario in horarios %}
+            <tr>
+                <td>{{ horario.dia_da_semana }}</td>
+                <td>{{ horario.aula.nome }}</td>
+                <td>{{ horario.aula.instrutor }}</td>
+                <td>{{ horario.hora_inicio }}</td>
+                <td>{{ horario.aula.duracao }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhum horário disponível no momento.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

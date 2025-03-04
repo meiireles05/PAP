@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Aula</title>
+</head>
+<body>
+    <h1>Reservar Aula</h1>
+    <p><strong>Título:</strong> {{ aula.titulo }}</p>
+    <p><strong>Instrutor:</strong> {{ aula.instrutor }}</p>
+    <p><strong>Horário:</strong> {{ aula.inicio }} - {{ aula.fim }}</p>
+    <p><strong>Vagas Disponíveis:</strong> {{ aula.vagas_disponiveis }}</p>
+
+    {% if reserva_existente %}
+        <p style="color: green;">Você já reservou esta aula!</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="cancelar">Cancelar Reserva</button>
+        </form>
+    {% else %}
+        {% if aula.vagas_disponiveis > 0 %}
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="reservar">Reservar</button>
+            </form>
+        {% else %}
+            <p style="color: red;">Infelizmente, esta aula já está lotada!</p>
+        {% endif %}
+    {% endif %}
+
+    <a href="{% url 'horario_semanal' %}">Voltar ao Horário</a>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário Anual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: black;
+        }
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .navbar .logo span {
+            color: #007bff;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 15px;
+        }
+        .navbar nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .navbar .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .navbar .buttons a {
+            padding: 8px 15px;
+            border: 2px solid #007bff;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .navbar .buttons a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .nav button, .nav select {
+            font-size: 14px;
+            padding: 8px;
+            margin: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 2px;
+            height: 30px;
+            position: relative;
+        }
+        th {
+            background-color: rgb(28, 101, 203);
+            color: white;
+        }
+        .aula {
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            background-color: #ffcccb;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 8px;
+            border: 1px solid #d00000;
+            border-radius: 3px;
+            overflow: hidden;
+            z-index: 1;
+            padding: 1px;
+        }
+        .aula a {
+            color: black;
+            text-decoration: none;
+        }
+        .aula.reservada {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+            border-color: #1b5e20;
+        }
+        .empty-cell {
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+            line-height: 1.2;
+        }
+        .empty-cell:hover {
+            background-color: #e6e6e6;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 768px) {
+            table {
+                font-size: 8px;
+            }
+            .aula {
+                font-size: 6px;
+            }
+            th, td {
+                height: 25px;
+                padding: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <nav class="navbar">
+        
+            <a href="{% url "gym:home" %}" class="logo">hn<span> sports performance</span></a>
+                  
+        </nav>
+        <div class="user-profile">
+            
+            
+            <a href="{% url 'gym:editar_perfil' %}" class="nav-btn logout-btn">
+                <span class="username profile-trigger" data-id="{{ user.id }}">{{ user.username }}</span>
+            </a>
+            <a href="{% url 'gym:logout' %}" class="nav-btn logout-btn">Logout</a>
+        </div>
+
+        <style>
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                color:rgb(255, 255, 255);
+            }
+            
+            .user-profile i {
+                font-size: 2.4rem;
+                color: #007bff;
+            }
+            
+            .user-profile .username {
+                font-size: 1.6rem;
+                font-weight: 500;
+            }
+            
+            .logout-btn {
+                font-size: 1.4rem;
+                padding: 0.8rem 1.6rem;
+            }
+            
+            @media (max-width: 768px) {
+                .user-profile {
+                    gap: 0.5rem;
+                }
+                
+                .user-profile .username {
+                    font-size: 1.4rem;
+                }
+                
+                .logout-btn {
+                    font-size: 1.2rem;
+                    padding: 0.6rem 1.2rem;
+                }
+            }
+        </style>
+
+    </div>
+    <div class="nav">
+        <form style="display:inline;" method="get">
+            <input type="hidden" name="data" value="{{ semana_anterior }}">
+            <button type="submit">Semana Anterior</button>
+        </form>
+        <form style="display:inline;" method="get">
+            <select name="data" onchange="this.form.submit()">
+                {% for mes in meses %}
+                    <option value="{{ mes.valor }}" {% if mes.valor == data_selecionada %}selected{% endif %}>
+                        {{ mes.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+        <form style="display:inline;" method="get">
+            <input type="hidden" name="data" value="{{ proxima_semana }}">
+            <button type="submit">Próxima Semana</button>
+        </form>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Hora</th>
+                {% for dia in dias_da_semana %}
+                    <th>{{ dia.date }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for hora in horas_do_dia %}
+            <tr>
+                <td>{{ hora }}</td>
+                {% for dia in dias_da_semana %}
+                <td>
+                    {% for aula in aulas %}
+                        {% if aula.dia|date:"Y-m-d" == dia|date:"Y-m-d" and aula.inicio|time:"H:i" == hora %}
+                        <div class="aula {% if aula.reservada %}reservada{% endif %}">
+                            <a href="{% url 'detalhes_aula' aula.id %}">
+                                <strong>{{ aula.titulo }}</strong><br>
+                                {{ aula.inicio }} - {{ aula.fim }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% if user.perfil.tipo == '1' %}
+                    <div class="empty-cell">
+                        <a href="{% url 'criar_aula' %}?dia={{ dia.date }}&hora={{ hora }}" class="empty-cell">
+                            <span>+</span>
+                        </a>
+                    </div>
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
